@@ -9,8 +9,9 @@ class PokemonController extends Controller {
      * Obtain the array of the name of the first generation pokemons
      * @return array
      */
+
     public function showPokemonsFirstGeneration() {
-        $pokemons = $this->pokeApiService->getPokemonFirstGeneration();
+        $pokemons = $this->pokeApiService->getPokemonFirstGeneration(0, 151);
         $response = [];
         foreach ($pokemons['response']->results as $result) {
             $newvalue = [
@@ -26,6 +27,11 @@ class PokemonController extends Controller {
      */
     public function showPokemon($idOrName) {
         $pokemon = $this->pokeApiService->getPokemon($idOrName);
+
+        if ($pokemon['response']->getStatusCode() === 404) {
+            return ['data' => $pokemon['response']->getData()->message];
+        }
+
         $evolution = $this->getEvolution($idOrName);
         $evolution_chain = $this->evolutionChain($evolution);
 
@@ -33,19 +39,19 @@ class PokemonController extends Controller {
         $stats = []; #array dos stats do pokemon a ser retornada
 
         #pega o nome de todos os moves do pokemon
-        foreach ($pokemon['response']->moves as $pokemon_move) {
-            array_push($moves, $pokemon_move->move->name);
+        foreach ($pokemon['data']['moves'] as $pokemon_move) {
+            array_push($moves, $pokemon_move['move']['name']);
         }
         #pega o nome e stat base de todos os stats do pokemon
-        foreach ($pokemon['response']->stats as $pokemon_stat) {
+        foreach ($pokemon['data']['stats'] as $pokemon_stat) {
             array_push($stats, [
-                'name' => $pokemon_stat->stat->name,
-                'base_stat' => $pokemon_stat->base_stat,
+                'name' => $pokemon_stat['stat']['name'],
+                'base_stat' => $pokemon_stat['base_stat'],
             ]);
         }
 
         $response = [
-            'name' => $pokemon['response']->name,
+            'name' => $pokemon['data']['name'],
             'moves' => $moves,
             'stats' => $stats,
             'evolution_chain' => $evolution_chain,
@@ -56,7 +62,7 @@ class PokemonController extends Controller {
 
     public function getEvolution($pokemon) {
         $evolution = $this->getSpecie($pokemon);
-        $evolution_chain =  json_decode(Http::get($evolution['response']->evolution_chain->url));
+        $evolution_chain =  json_decode(Http::get($evolution['data']['evolution_chain']['url']));
 
         return ['response' => $evolution_chain];
     }

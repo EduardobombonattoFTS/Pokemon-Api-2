@@ -18,10 +18,10 @@ class PokeAPIService {
      * Obtain the list of pokemons first generation
      * @return json
      */
-    public function getPokemonFirstGeneration() {
+    public function getPokemonFirstGeneration($offset, $limit) {
         $response = Http::get("{$this->baseUrl}/pokemon", [
-            'offset' => 0,
-            'limit' => 151,
+            'offset' => $offset,
+            'limit' => $limit,
         ]);
         if ($response->successful()) {
             return ['response' => json_decode($response)];
@@ -40,11 +40,16 @@ class PokeAPIService {
         $response = Http::get("{$this->baseUrl}/pokemon/{$idOrName}");
 
         if ($response->successful()) {
-            return ['response' => json_decode($response)];
+            return [
+                'response' => response()->json(),
+                'data' => $response->json(),
+            ];
         } else {
-            return response()->json([
-                'message' => 'Houve um erro, tente novamente',
-            ], $response->status());
+            return [
+                'response' => response()->json([
+                    'message' => 'Houve um erro, tente novamente',
+                ], $response->status()),
+            ];
         }
     }
 
@@ -56,11 +61,16 @@ class PokeAPIService {
         $response = Http::get("{$this->baseUrl}/pokemon-species/{$idOrName}");
 
         if ($response->successful()) {
-            return ['response' => json_decode($response)];
+            return [
+                'response' => response()->json(),
+                'data' => $response->json(),
+            ];
         } else {
-            return response()->json([
-                'message' => 'Houve um erro, tente novamente',
-            ], $response->status());
+            return [
+                'response' => response()->json([
+                    'message' => 'Houve um erro, tente novamente',
+                ], $response->status()),
+            ];
         }
     }
 
@@ -72,11 +82,16 @@ class PokeAPIService {
         $response = Http::get("{$this->baseUrl}/evolution-chain/{$id}");
 
         if ($response->successful()) {
-            return ['response' => json_decode($response)];
+            return [
+                'response' => response()->json(),
+                'data' => $response->json(),
+            ];
         } else {
-            return response()->json([
-                'message' => 'Houve um erro, tente novamente',
-            ], $response->status());
+            return [
+                'response' => response()->json([
+                    'message' => 'Houve um erro, tente novamente',
+                ], $response->status()),
+            ];
         }
     }
 }
