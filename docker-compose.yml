@@ -1,0 +1,32 @@
+version: '3'
+services:
+    laravel:
+        image: 'php:8.1-apache'
+        restart: always
+        tty: true
+        working_dir: "/var/www/html"
+        build:
+            context: ./docker
+            dockerfile: Dockerfile
+
+            args:
+                uid: 1000
+                NODE_VERSION: '20.8.1'
+                PHP_VERSION: '8.1'
+        environment:
+            PHP_VERSION: '8.1'
+            APACHE_RUN_USER: 'www-data'
+            APACHE_RUN_GROUP: 'www-data'
+        ports:
+            - '${APP_PORT:-8000}:80'
+            - '5174:5174'
+        volumes:
+            - '.:/var/www/html'
+            - './docker/.bashrc:/root/.bashrc'
+            - './docker/apache/laravel.conf:/etc/apache2/sites-available/000-default.conf'
+        networks:
+            - network
+
+networks:
+    network:
+        driver: bridge
