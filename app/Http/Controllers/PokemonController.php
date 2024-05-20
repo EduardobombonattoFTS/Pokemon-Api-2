@@ -10,8 +10,8 @@ class PokemonController extends Controller {
      * @return array
      */
 
-    public function showPokemonsFirstGeneration() {
-        $pokemons = $this->pokeApiService->getPokemonFirstGeneration(0, 151);
+    public function showNamePokemonsFirstGeneration() {
+        $pokemons = $this->pokeApiService->getPokemonFirstGenerationOnPokeApi(0, 151);
         $response = [];
         foreach ($pokemons['response']->results as $result) {
             $newvalue = [
@@ -25,15 +25,15 @@ class PokemonController extends Controller {
     /**
      * Obtian the array of the details of a pokemon
      */
-    public function showPokemon($idOrName) {
-        $pokemon = $this->pokeApiService->getPokemon($idOrName);
+    public function showPokemonInformationsByIdOrName($idOrName) {
+        $pokemon = $this->pokeApiService->getPokemonOnPokeApi($idOrName);
 
         if ($pokemon['response']->getStatusCode() === 404) {
             return ['data' => $pokemon['response']->getData()->message];
         }
 
-        $evolution = $this->getEvolution($idOrName);
-        $evolution_chain = $this->evolutionChain($evolution);
+        $evolution = $this->getPokemonEvolutionChainByIdOrName($idOrName);
+        $evolution_chain = $this->getEvolutionChainFormated($evolution);
 
         $moves = []; #array dos moves do pokemon a ser retornada
         $stats = []; #array dos stats do pokemon a ser retornada
@@ -60,21 +60,21 @@ class PokemonController extends Controller {
         return $response;
     }
 
-    public function getEvolution($pokemon) {
-        $evolution = $this->getSpecie($pokemon);
+    public function getPokemonEvolutionChainByIdOrName($pokemon) {
+        $evolution = $this->getPokemonSpecieByIdOrName($pokemon);
         $evolution_chain =  json_decode(Http::get($evolution['data']['evolution_chain']['url']));
 
         return ['response' => $evolution_chain];
     }
 
-    public function getSpecie($idOrName) {
-        $pokemon_specie = $this->pokeApiService->getSpecie($idOrName);
+    public function getPokemonSpecieByIdOrName($idOrName) {
+        $pokemon_specie = $this->pokeApiService->getPokemonSpecieOnPokeApi($idOrName);
         return $pokemon_specie;
     }
 
     #trata a evolution chain e retorna em forma de array.
     #como o maximo de evoluções que um pokemon pode ter é 2, então esse código funciona!
-    public function evolutionChain($evolution) {
+    public function getEvolutionChainFormated($evolution) {
         $pokemon_evolutions = [
             'name' => $evolution['response']->chain->species->name,
             'evolves_to' => [],

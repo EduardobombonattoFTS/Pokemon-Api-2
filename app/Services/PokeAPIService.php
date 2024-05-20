@@ -18,7 +18,7 @@ class PokeAPIService {
      * Obtain the list of pokemons first generation
      * @return json
      */
-    public function getPokemonFirstGeneration($offset, $limit) {
+    public function getPokemonFirstGenerationOnPokeApi($offset, $limit) {
         $response = Http::get("{$this->baseUrl}/pokemon", [
             'offset' => $offset,
             'limit' => $limit,
@@ -36,7 +36,7 @@ class PokeAPIService {
      * Obtain the details of a pokemon
      * @return stdClass
      */
-    public function getPokemon($idOrName) {
+    public function getPokemonOnPokeApi($idOrName) {
         $response = Http::get("{$this->baseUrl}/pokemon/{$idOrName}");
 
         if ($response->successful()) {
@@ -57,29 +57,8 @@ class PokeAPIService {
      * Forms the basis for at least one Pokémon.
      * @return stdClass
      */
-    public function getSpecie($idOrName) {
+    public function getPokemonSpecieOnPokeApi($idOrName) {
         $response = Http::get("{$this->baseUrl}/pokemon-species/{$idOrName}");
-
-        if ($response->successful()) {
-            return [
-                'response' => response()->json(),
-                'data' => $response->json(),
-            ];
-        } else {
-            return [
-                'response' => response()->json([
-                    'message' => 'Houve um erro, tente novamente',
-                ], $response->status()),
-            ];
-        }
-    }
-
-    /**
-     * Forms the basis for at least one Pokémon.
-     * @return stdClass
-     */
-    public function getEvolutionChain($id) {
-        $response = Http::get("{$this->baseUrl}/evolution-chain/{$id}");
 
         if ($response->successful()) {
             return [

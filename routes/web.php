@@ -19,6 +19,6 @@ Route::get('/', function () {
 });
 
 Route::prefix('pokemon')->name('pokemon.')->controller(PokemonController::class)->group(function () {
-    Route::get('/list', 'showPokemonsFirstGeneration')->name('pokemon.index');
-    Route::get('/{idOrName}', 'showPokemon')->name('pokemon.show');
+    Route::get('/get_list_pokemons_first_generation', 'showNamePokemonsFirstGeneration')->name('pokemon.index');
+    Route::get('/get_pokemon_by_name_or_id/{idOrName}', 'showPokemonInformationsByIdOrName')->name('pokemon.show');
 });
