@@ -1,7 +1,39 @@
 version: '3'
 services:
+    postgres:
+        image: 'postgres:latest'
+        ports:
+            - '${APP_DB_PORT:-5432}:5432'
+        environment:
+            POSTGRES_USER: '${DB_USERNAME:-postgres}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-postgres}'
+            POSTGRES_DB: '${DB_DATABASE:-laravel}'
+            POSTGRES_INITDB: |
+                sed -i -e 's/max_connections.*/max_connections = 5000/' /var/lib/postgresql/data/postgresql.conf
+                sed -i -e 's/#log_min_duration_statement = .*/log_min_duration_statement = 0/' /var/lib/postgresql/data/postgresql.conf
+        volumes:
+            - postgres:/var/lib/postgresql/data/
+        stdin_open: true
+        networks:
+            - network
+
+    redis:
+        image: 'redis:alpine'
+        restart: always
+        volumes:
+            - 'redis:/data'
+        networks:
+            - network
+        healthcheck:
+            test:
+                - CMD
+                - redis-cli
+                - ping
+            retries: 3
+            timeout: 5s
+
     laravel:
-        image: 'php:8.1-apache'
+        image: 'php:8.2-apache'
         restart: always
         tty: true
         working_dir: "/var/www/html"
@@ -12,21 +44,32 @@ services:
             args:
                 uid: 1000
                 NODE_VERSION: '20.8.1'
-                PHP_VERSION: '8.1'
+                PHP_VERSION: '8.2'
         environment:
-            PHP_VERSION: '8.1'
+            PHP_VERSION: '8.2'
             APACHE_RUN_USER: 'www-data'
             APACHE_RUN_GROUP: 'www-data'
         ports:
             - '${APP_PORT:-8000}:80'
-            - '5174:5174'
+            - '5173:5173'
         volumes:
             - '.:/var/www/html'
             - './docker/.bashrc:/root/.bashrc'
             - './docker/apache/laravel.conf:/etc/apache2/sites-available/000-default.conf'
+        depends_on:
+            - postgres
+            - redis
+        links:
+            - postgres
+            - redis
         networks:
             - network
 
 networks:
     network:
         driver: bridge
+volumes:
+    postgres:
+        driver: local
+    redis:
+        driver: local
