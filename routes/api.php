@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\DriverAddressController;
+use App\Http\Controllers\DriverController;
 use App\Http\Controllers\PokemonController;
+use App\Http\Controllers\TruckController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +25,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('pokemon')->name('pokemon.')->controller(PokemonController::class)->group(function () {
     Route::get('/get_list_pokemons_first_generation', 'showNamePokemonsFirstGeneration')->name('pokemon.index');
     Route::get('/get_pokemon_by_name_or_id/{idOrName}', 'showPokemonInformationsByIdOrName')->name('pokemon.show');
+});
+
+Route::controller(DriverController::class)->prefix('driver')->name('driver')->group(function () {
+    Route::post('/create', 'createDriverOnDatabase')->name('create');
+    Route::put('/update/{driver_uuid}', 'updateDriverOnDatabase')->name('update');
+    Route::delete('/delete/{driver_uuid}', 'deleteDriverFromDatabase')->name('update');
+});
+
+Route::controller(TruckController::class)->prefix('truck')->name('truck')->group(function () {
+    Route::post('/create', 'createTruckOnDatabase')->name('create');
+    Route::put('/update/{truck_uuid}', 'updateTruckOnDatabase')->name('update');
+    Route::delete('/delete/{truck_uuid}', 'deleteTruckFromDatabase')->name('update');
+});
+
+Route::controller(DriverAddressController::class)->prefix('driver_address')->name('driver_address')->group(function () {
+    Route::post('/create', 'createDriverAddressOnDatabase')->name('create');
+    Route::put('/update/{driver_address_uuid}', 'updateDriverAddressOnDatabase')->name('update');
+    Route::delete('/delete/{driver_address_uuid}', 'deleteDriverAddressFromDatabase')->name('update');
 });
