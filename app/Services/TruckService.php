@@ -45,9 +45,11 @@ class TruckService {
     public function success($message, $data = [], $statusCode = 200, $breakCode = true) {
         return $this->createResponse($message, $data, null, $statusCode, true, $breakCode);
     }
+
     public function notFound($messageError, $data = [], $breakCode = true) {
         return $this->createResponse("Nenhuma informação existente!", $data, $messageError, 404, false, $breakCode);
     }
+
     public function fail($messageError, $data = [], $statusCode = 400, $breakCode = true) {
         return $this->createResponse($messageError, $data, $messageError, $statusCode, false, $breakCode);
     }
