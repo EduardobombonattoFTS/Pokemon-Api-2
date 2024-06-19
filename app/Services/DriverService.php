@@ -72,6 +72,12 @@ class DriverService {
     public function create(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
+        if (empty($data['cpf'])) {
+            return $this->fail("CPF obrigatório, por favor preencher.", [], false);
+        }
+        if ($this->model->where('cpf', $data['cpf'])->first()) {
+            return $this->fail("CPF já cadastrado.", [], false);
+        }
         try {
             $create = $this->model->create($data);
             if (!$create)
