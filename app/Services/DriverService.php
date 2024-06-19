@@ -72,12 +72,23 @@ class DriverService {
     public function create(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
+        //checa se CPF está vazio
         if (empty($data['cpf'])) {
             return $this->fail("CPF obrigatório, por favor preencher.", [], false);
         }
+        //checa se CPF já esta cadastrado
         if ($this->model->where('cpf', $data['cpf'])->first()) {
             return $this->fail("CPF já cadastrado.", [], false);
         }
+        //checa se é um cpf valido, 11 caracteres
+        if ((strlen($data['cpf'])) != 11) {
+            return $this->fail("CPF inválido.", [], false);
+        }
+        //checa se todos os caracteres do cpf são numeros
+        if (!ctype_digit($data['cpf'])) {
+            return $this->fail("CPF inválido.", [], false);
+        }
+
         try {
             $create = $this->model->create($data);
             if (!$create)
