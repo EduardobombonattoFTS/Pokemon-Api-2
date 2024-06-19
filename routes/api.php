@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
+|--------------------------------------------------------------------------c
 | API Routes
 |--------------------------------------------------------------------------
 |
@@ -31,16 +31,19 @@ Route::controller(DriverController::class)->prefix('driver')->name('driver')->gr
     Route::post('/create', 'createDriverOnDatabase')->name('create');
     Route::put('/update/{driver_uuid}', 'updateDriverOnDatabase')->name('update');
     Route::delete('/delete/{driver_uuid}', 'deleteDriverFromDatabase')->name('update');
+    Route::get('/get_all_from_database', 'getAll')->name('all');
 });
 
 Route::controller(TruckController::class)->prefix('truck')->name('truck')->group(function () {
     Route::post('/create', 'createTruckOnDatabase')->name('create');
     Route::put('/update/{truck_uuid}', 'updateTruckOnDatabase')->name('update');
     Route::delete('/delete/{truck_uuid}', 'deleteTruckFromDatabase')->name('update');
+    Route::get('/get_all_from_database', 'getAll')->name('all');
 });
 
 Route::controller(DriverAddressController::class)->prefix('driver_address')->name('driver_address')->group(function () {
     Route::post('/create', 'createDriverAddressOnDatabase')->name('create');
     Route::put('/update/{driver_address_uuid}', 'updateDriverAddressOnDatabase')->name('update');
     Route::delete('/delete/{driver_address_uuid}', 'deleteDriverAddressFromDatabase')->name('update');
+    Route::get('/get_all_from_database', 'getAll')->name('all');
 });
