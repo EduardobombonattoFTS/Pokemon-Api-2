@@ -52,6 +52,22 @@ class TruckService {
         return $this->createResponse($messageError, $data, $messageError, $statusCode, false, $breakCode);
     }
 
+    //função para checar se placa do caminhão é válida, desnecessária pois pode usar o site do governo direto, mas aqui fica por isso mesmo.
+    public function isValidPLate($plate) {
+        if (strlen($plate) != 7) {
+            return false;
+        }
+        // Verifica o formato LLLDDDD, sendo L letra e D digito
+        if (ctype_alpha(substr($plate, 0, 3)) && ctype_digit(substr($plate, 3, 4))) {
+            return true;
+        }
+        // Verifica o formato LLLDLDD, sendo L letra e D dgito
+        if (ctype_alpha(substr($plate, 0, 3)) && ctype_digit($plate[3]) && ctype_alpha($plate[4]) && ctype_digit(substr($plate, 5, 2))) {
+            return true;
+        }
+        return false;
+    }
+
     public function getAll($viewResponse = null) {
         $this->viewResponse($viewResponse);
 
@@ -69,6 +85,19 @@ class TruckService {
 
     public function create(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
+
+        //checa se CPF está vazio
+        if (empty($data['plate'])) {
+            return $this->fail("Placa é obrigatório, por favor preencher.", [], false);
+        }
+        //checa se CPF já esta cadastrado
+        if ($this->model->where('plate', $data['plate'])->first()) {
+            return $this->fail("Placa já cadastrado.", [], false);
+        }
+        //checa se placa é valida
+        if (!$this->isValidPLate($data['plate'])) {
+            return $this->fail("Placa inválida, favor verificar", [], false);
+        }
 
         try {
 

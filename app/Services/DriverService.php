@@ -103,6 +103,10 @@ class DriverService {
 
     public function update($data, $uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
+
+        if (!$this->model->where('uuid', $uuid)) {
+            return $this->fail("uuid errado", [], false);
+        }
         try {
 
             $update = $this->model->where('uuid', $uuid);
