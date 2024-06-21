@@ -12,6 +12,10 @@ class DriverAddressController extends Controller {
         $this->service = $service;
     }
 
+    public function index() {
+        return $this->service->index();
+    }
+
     public function getAll() {
         return $this->service->getAll();
     }

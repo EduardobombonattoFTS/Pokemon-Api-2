@@ -52,6 +52,13 @@ class TruckService {
         return $this->createResponse($messageError, $data, $messageError, $statusCode, false, $breakCode);
     }
 
+    public function index() {
+        $data = $this->getAll()->getData();
+        return view('truck_index', [
+            'data' => $data,
+        ]);
+    }
+
     //função para checar se placa do caminhão é válida, desnecessária pois pode usar o site do governo direto, mas aqui fica por isso mesmo.
     public function isValidPLate($plate) {
         if (strlen($plate) != 7) {

@@ -54,6 +54,13 @@ class DriverService {
         return $this->createResponse($messageError, $data, $messageError, $statusCode, false, $breakCode);
     }
 
+    public function index() {
+        $data = $this->getAll()->getData();
+        return view('driver_index', [
+            'data' => $data,
+        ]);
+    }
+
     public function getAll($viewResponse = null) {
         $this->viewResponse($viewResponse);
 

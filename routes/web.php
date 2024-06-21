@@ -28,13 +28,16 @@ Route::prefix('pokemon')->name('pokemon.')->controller(PokemonController::class)
 
 Route::controller(DriverController::class)->prefix('driver')->name('driver')->group(function () {
     Route::get('/get_all_from_database', 'getAll')->name('all');
+    Route::get('/get_data', 'index')->name('index');
 });
 
 
 Route::controller(TruckController::class)->prefix('truck')->name('truck')->group(function () {
     Route::get('/get_all_from_database', 'getAll')->name('all');
+    Route::get('/get_data', 'index')->name('index');
 });
 
 Route::controller(DriverAddressController::class)->prefix('driver_address')->name('driver_address')->group(function () {
     Route::get('/get_all_from_database', 'getAll')->name('all');
+    Route::get('/get_data', 'index')->name('index');
 });

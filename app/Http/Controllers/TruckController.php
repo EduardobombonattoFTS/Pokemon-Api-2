@@ -11,6 +11,10 @@ class TruckController extends Controller {
     public function __construct(TruckService $service) {
         $this->service = $service;
     }
+
+    public function index() {
+        return $this->service->index();
+    }
     public function getAll() {
         return $this->service->getAll();
     }
