@@ -76,35 +76,40 @@ class DriverService {
         }
     }
 
+    protected function validateCpf($cpf) {
+        if (empty($cpf)) {
+            return "O campo CPF obrigatório, por favor preencher.";
+        }
+        if (strlen($cpf) != 11) {
+            return "O CPF inválido. Deve ter 11 dígitos.";
+        }
+        if (!ctype_digit($cpf)) {
+            return "O CPF inválido. Deve conter apenas números.";
+        }
+        if ($this->model->where('cpf', $cpf)->first()) {
+            return "CPF já cadastrado em nosso sistema .";
+        }
+        return true;
+    }
+
     public function create(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
-        //checa se CPF está vazio
-        if (empty($data['cpf'])) {
-            return $this->fail("CPF obrigatório, por favor preencher.", [], false);
-        }
-        //checa se CPF já esta cadastrado
-        if ($this->model->where('cpf', $data['cpf'])->first()) {
-            return $this->fail("CPF já cadastrado.", [], false);
-        }
-        //checa se é um cpf valido, 11 caracteres
-        if ((strlen($data['cpf'])) != 11) {
-            return $this->fail("CPF inválido.", [], false);
-        }
-        //checa se todos os caracteres do cpf são numeros
-        if (!ctype_digit($data['cpf'])) {
-            return $this->fail("CPF inválido.", [], false);
+        // Valida o CPF
+        $cpfValidation = $this->validateCpf($data['cpf']);
+        if ($cpfValidation !== true) {
+            return $this->fail($cpfValidation, [], false);
         }
 
         try {
             $create = $this->model->create($data);
             if (!$create)
-                return $this->notFound("Não foi possível inserir os dados.", [], false);
+                return $this->notFound("Não foi possível cadastrar o motorista favor verificar os dados", [], false);
 
-            return $this->success("Dados inserido no Banco de dados.", $create, 200, false);
+            return $this->success("Motorista cadastrado com sucesso.", $create, 200, false);
         } catch (\Exception $e) {
 
-            return $this->fail("Falha ao inserir dados.", $e);
+            return $this->fail("Falha ao inserir ao cadastrar motorista.", $e);
         }
     }
 
@@ -118,7 +123,7 @@ class DriverService {
 
             $update = $this->model->where('uuid', $uuid);
             if ($update->doesntExist())
-                return $this->notFound("Registro não encontrado.", [], false);
+                return $this->notFound("Motorista não encontrado, favor verificar as informações", [], false);
 
             $update = $update->first();
             foreach ($data as $key => $value) {
@@ -144,7 +149,7 @@ class DriverService {
             if (!$destroy)
                 return $this->notFound("Não foi possivel deletar o registro.", [], false);
 
-            return $this->success("Registro deletado com sucesso.", $destroy, 200, false);
+            return $this->success("Motorista excluído com sucesso.", $destroy, 200, false);
         } catch (\Exception $e) {
 
             return $this->fail("Houve uma falha ao deletar o registro", $e);
