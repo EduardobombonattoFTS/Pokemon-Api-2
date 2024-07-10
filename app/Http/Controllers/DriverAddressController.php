@@ -17,26 +17,26 @@ class DriverAddressController extends Controller {
     }
 
     public function getAll() {
-        return $this->service->getAll();
+        return $this->service->getAllDataFromDatabase();
     }
     /**
      * Create a newly resource in database.
      */
     public function createDriverAddressOnDatabase(Request $request) {
-        return $this->service->create($request->all());
+        return $this->service->createDriverAddressOnDatabase($request->all());
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function updateDriverAddressOnDatabase(Request $request, $uuid) {
-        return $this->service->update($request->all(), $uuid);
+        return $this->service->updateDriverAddressOnDatabase($request->all(), $uuid);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function deleteDriverAddressFromDatabase(string $uuid) {
-        return $this->service->destroy($uuid);
+        return $this->service->destroyDriverAddressOnDatabase($uuid);
     }
 }

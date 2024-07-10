@@ -55,13 +55,13 @@ class DriverAddressService {
     }
 
     public function index() {
-        $data = $this->getAll()->getData();
+        $data = $this->getAllDataFromDatabase()->getData();
         return view('driver_address_index', [
             'data' => $data,
         ]);
     }
 
-    public function getAll($viewResponse = null) {
+    public function getAllDataFromDatabase($viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         try {
@@ -77,7 +77,7 @@ class DriverAddressService {
     }
 
 
-    public function create(array $data, $viewResponse = null) {
+    public function createDriverAddressOnDatabase(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         $existingAddress = $this->model->where('motorista_id', $data['motorista_id'])->first();
@@ -89,16 +89,16 @@ class DriverAddressService {
             $create = $this->model->create($data);
 
             if (!$create)
-                return $this->notFound("Não foi possível inserir os dados.", [], false);
+                return $this->notFound("Não foi adicionar endereço ao motorista, favor verificar os dados.", [], false);
 
-            return $this->success("Dados inserido no Banco de dados.", $create, 200, false);
+            return $this->success("Endereço cadastrado com sucesso.", $create, 200, false);
         } catch (\Exception $e) {
 
-            return $this->fail("Falha ao inserir dados.", $e);
+            return $this->fail("Falha ao cadastrar endereço, favor tente novamente.", $e);
         }
     }
 
-    public function update($data, $uuid, $viewResponse = null) {
+    public function updateDriverAddressOnDatabase($data, $uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
         try {
 
@@ -106,7 +106,7 @@ class DriverAddressService {
 
             if ($update->doesntExist())
 
-                return $this->notFound("Registro não encontrado.", [], false);
+                return $this->notFound("Endereço do motorista não encontrado, tente novamente.", [], false);
 
             $update = $update->first();
 
@@ -114,30 +114,30 @@ class DriverAddressService {
                 if ($value !== null) $update->$key = $value;
             }
             if (!$update->save())
-                return $this->notFound("Não foi possivel salvar as alterações do registro.", [], false);
+                return $this->notFound("Não foi possivel salvar as alterações do endereço do motorista, tente novamente.", [], false);
 
-            return $this->success("Alterações salva com sucesso.", $data, 200, false);
+            return $this->success("Alterações no endereço salvas com sucesso.", $data, 200, false);
         } catch (\Exception $e) {
-            return $this->fail("Houve uma falha ao salvar as alterações do registro", $e);
+            return $this->fail("Houve uma falha ao salvar as alterações do endereço, favor tente novamente", $e);
         }
     }
 
-    public function destroy($uuid, $viewResponse = null) {
+    public function destroyDriverAddressOnDatabase($uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         try {
 
             $destroy = $this->model->where('uuid', $uuid);
             if ($destroy->doesntExist())
-                return $this->notFound("Registro não encontrado.", [], false);
+                return $this->notFound("Endereço não encontrado, verifique as informações e tente novamente", [], false);
             $destroy = $destroy->delete();
             if (!$destroy)
-                return $this->notFound("Não foi possivel deletar o registro.", [], false);
+                return $this->notFound("Não foi possivel excluir o endereço, favor tente novamente.", [], false);
 
-            return $this->success("Registro deletado com sucesso.", $destroy, 200, false);
+            return $this->success("Endereço excluído com sucesso.", $destroy, 200, false);
         } catch (\Exception $e) {
 
-            return $this->fail("Houve uma falha ao deletar o registro", $e);
+            return $this->fail("Houve uma falha ao excluir o endereço, favor tentar novamente", $e);
         }
     }
 }
