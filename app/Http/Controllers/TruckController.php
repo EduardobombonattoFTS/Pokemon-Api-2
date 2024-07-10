@@ -16,26 +16,26 @@ class TruckController extends Controller {
         return $this->service->index();
     }
     public function getAll() {
-        return $this->service->getAll();
+        return $this->service->getAllDataFromDatabase();
     }
     /**
      * Create a newly resource in database.
      */
     public function createTruckOnDatabase(Request $request) {
-        return $this->service->create($request->all());
+        return $this->service->createTruckOnDatase($request->all());
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function updateTruckOnDatabase(Request $request, $uuid) {
-        return $this->service->update($request->all(), $uuid);
+        return $this->service->updateTruckOnDatase($request->all(), $uuid);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function deleteTruckFromDatabase(string $uuid) {
-        return $this->service->destroy($uuid);
+        return $this->service->destroyTruckOnDatase($uuid);
     }
 }

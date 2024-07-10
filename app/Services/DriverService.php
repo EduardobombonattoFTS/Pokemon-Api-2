@@ -104,7 +104,7 @@ class DriverService {
         try {
             $create = $this->model->create($data);
             if (!$create)
-                return $this->notFound("Não foi possível cadastrar o motorista favor verificar os dados", [], false);
+                return $this->notFound("Não foi possível cadastrar o motorista, favor verificar os dados.", [], false);
 
             return $this->success("Motorista cadastrado com sucesso.", $create, 200, false);
         } catch (\Exception $e) {

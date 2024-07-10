@@ -53,7 +53,7 @@ class TruckService {
     }
 
     public function index() {
-        $data = $this->getAll()->getData();
+        $data = $this->getAllDataFromDatabase()->getData();
         return view('truck_index', [
             'data' => $data,
         ]);
@@ -75,7 +75,7 @@ class TruckService {
         return false;
     }
 
-    public function getAll($viewResponse = null) {
+    public function getAllDataFromDatabase($viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         try {
@@ -90,7 +90,7 @@ class TruckService {
         }
     }
 
-    public function create(array $data, $viewResponse = null) {
+    public function createTruckOnDatase(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         //checa se CPF está vazio
@@ -111,16 +111,16 @@ class TruckService {
             $create = $this->model->create($data);
 
             if (!$create)
-                return $this->notFound("Não foi possível cadastrar caminhão", [], false);
+                return $this->notFound("Não foi possível cadastrar caminhão, favor verificar os dados.", [], false);
 
             return $this->success("Caminhão cadastrado com sucesso.", $create, 200, false);
         } catch (\Exception $e) {
 
-            return $this->fail("Falha ao inserir dados, tente novamente.", $e);
+            return $this->fail("Falha ao cadastrar caminhão, tente novamente.", $e);
         }
     }
 
-    public function update($data, $uuid, $viewResponse = null) {
+    public function updateTruckOnDatase($data, $uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
         try {
 
@@ -144,14 +144,14 @@ class TruckService {
         }
     }
 
-    public function destroy($uuid, $viewResponse = null) {
+    public function destroyTruckOnDatase($uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         try {
 
             $destroy = $this->model->where('uuid', $uuid);
             if ($destroy->doesntExist())
-                return $this->notFound("Registro não encontrado.", [], false);
+                return $this->notFound("Caminhão não encontrado.", [], false);
             $destroy = $destroy->delete();
             if (!$destroy)
                 return $this->notFound("Não foi possivel excluir o caminhão", [], false);
