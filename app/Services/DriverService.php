@@ -55,13 +55,13 @@ class DriverService {
     }
 
     public function index() {
-        $data = $this->getAll()->getData();
+        $data = $this->getAllDataFromDatabase()->getData();
         return view('driver_index', [
             'data' => $data,
         ]);
     }
 
-    public function getAll($viewResponse = null) {
+    public function getAllDataFromDatabase($viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         try {
@@ -92,7 +92,7 @@ class DriverService {
         return true;
     }
 
-    public function create(array $data, $viewResponse = null) {
+    public function createDriverOnDatabase(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         // Valida o CPF
@@ -113,7 +113,7 @@ class DriverService {
         }
     }
 
-    public function update($data, $uuid, $viewResponse = null) {
+    public function updateDriverOnDatabase($data, $uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         if (!$this->model->where('uuid', $uuid)) {
@@ -138,7 +138,7 @@ class DriverService {
         }
     }
 
-    public function destroy($uuid, $viewResponse = null) {
+    public function destroyDriverOnDatabase($uuid, $viewResponse = null) {
         $this->viewResponse($viewResponse);
 
         try {
