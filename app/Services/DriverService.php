@@ -109,7 +109,7 @@ class DriverService {
             return $this->success("Motorista cadastrado com sucesso.", $create, 200, false);
         } catch (\Exception $e) {
 
-            return $this->fail("Falha ao inserir ao cadastrar motorista.", $e);
+            return $this->fail("Falha ao inserir o cadastro do motorista.", $e);
         }
     }
 
@@ -132,9 +132,9 @@ class DriverService {
             if (!$update->save())
                 return $this->notFound("Não foi possivel salvar as alterações do registro.", [], false);
 
-            return $this->success("Alterações salva com sucesso.", $data, 200, false);
+            return $this->success("Dados do motorista alterados com sucesso.", $data, 200, false);
         } catch (\Exception $e) {
-            return $this->fail("Houve uma falha ao salvar as alterações do registro", $e);
+            return $this->fail("Falha ao atualizar dados do motorista", $e);
         }
     }
 
@@ -144,15 +144,15 @@ class DriverService {
         try {
             $destroy = $this->model->where('uuid', $uuid);
             if ($destroy->doesntExist())
-                return $this->notFound("Registro não encontrado.", [], false);
+                return $this->notFound("Motorista não encontrado, favor verificar as informações.", [], false);
             $destroy = $destroy->delete();
             if (!$destroy)
-                return $this->notFound("Não foi possivel deletar o registro.", [], false);
+                return $this->notFound("Não foi possível excluir o motorista, favor verficiar as informações.", [], false);
 
             return $this->success("Motorista excluído com sucesso.", $destroy, 200, false);
         } catch (\Exception $e) {
 
-            return $this->fail("Houve uma falha ao deletar o registro", $e);
+            return $this->fail("Houve uma falha ao excluir o motorista.", $e);
         }
     }
 }
