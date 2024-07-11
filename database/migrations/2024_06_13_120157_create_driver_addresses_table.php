@@ -12,6 +12,7 @@ return new class extends Migration {
         Schema::create('driver_addresses', function (Blueprint $table) {
             $table->id();
             $table->uuid();
+            $table->string('cep');
             $table->string('street');
             $table->string('number');
             $table->string('district');

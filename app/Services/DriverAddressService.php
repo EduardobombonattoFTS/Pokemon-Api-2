@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DriverAddress;
+use Illuminate\Support\Facades\Http;
 
 class DriverAddressService {
 
@@ -75,10 +76,22 @@ class DriverAddressService {
             return $this->fail("Houve uma falha ao retornar os registros", $e);
         }
     }
-
+    public function viacepRequest($cep) {
+        $response = json_decode(Http::get("https://viacep.com.br/ws/{$cep}/json/"));
+        $formattedResponse = [
+            'street' => $response->logradouro,
+            'district' => $response->bairro,
+            'city' => $response->localidade,
+            'state' => $response->uf,
+        ];
+        return $formattedResponse;
+    }
 
     public function createDriverAddressOnDatabase(array $data, $viewResponse = null) {
         $this->viewResponse($viewResponse);
+        if (key_exists("cep", $data)) {
+            $data = array_merge($data, $this->viacepRequest($data["cep"]));
+        }
 
         $existingAddress = $this->model->where('motorista_id', $data['motorista_id'])->first();
         if ($existingAddress) {
